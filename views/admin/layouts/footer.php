@@ -4,7 +4,7 @@
 <footer class="text-white text-center py-3" style="background-color: #343a40;">
     2026 - Trần Ngọc Hải
 </footer>
-<script src="/TranNgocHai_LTW1/MiniShop_TranNgocHai/assets/bootstrap.bundle.min.js"></script>
+<script src="/MiniShop_TranNgocHai/assets/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 

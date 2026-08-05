@@ -8,9 +8,9 @@
         <?= isset($pageTitle) ? $pageTitle : "Trang Quản Trị" ?>
     </title>
     <!-- Bootstrap 5 -->
-    <link href="/TranNgocHai_LTW1/MiniShop_TranNgocHai/assets/bootstrap.min.css" rel="stylesheet">
+    <link href="/MiniShop_TranNgocHai/assets/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="/TranNgocHai_LTW1/MiniShop_TranNgocHai/assets/css/style.css">
+    <link rel="stylesheet" href="/MiniShop_TranNgocHai/assets/css/style.css">
 </head>
 
 <body>
