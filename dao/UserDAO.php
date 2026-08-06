@@ -5,15 +5,31 @@ require_once __DIR__ . "/../models/User.php";
 class UserDAO extends BaseDAO {
     public function __construct() { parent::__construct(); }
 
-    public function getAll() {
+    public function getAll($keyword = "") {
         $list = [];
         try {
             $sql = "SELECT * FROM users";
-            $result = $this->executeQuery($sql);
+            if (!empty($keyword)) {
+                $sql .= " WHERE fullname LIKE ? OR username LIKE ?";
+            }
+            $sql .= " ORDER BY fullname";
+
+            if (!empty($keyword)) {
+                $stmt = $this->prepare($sql);
+                $param = "%" . $keyword . "%";
+                $stmt->bind_param("ss", $param, $param);
+                $stmt->execute();
+                $result = $stmt->get_result();
+            } else {
+                $result = $this->executeQuery($sql);
+            }
+
             while ($row = $result->fetch_assoc()) {
-                $user = new User($row["fullname"], $row["username"], $row["password"], $row["email"], $row["phone"], $row["address"], (int)$row["role"], (int)$row["status"]);
-                $user->id = $row["id"];
-                $list[] = $user;
+                $u = new User($row["fullname"], $row["username"], $row["password"], $row["email"], $row["phone"], $row["address"], (int)$row["role"], (int)$row["status"]);
+                $u->id = (int)$row["id"];
+                $u->createdAt = $row["created_at"];
+                $u->updatedAt = $row["updated_at"];
+                $list[] = $u;
             }
         } catch (Exception $e) { throw $e; }
         return $list;

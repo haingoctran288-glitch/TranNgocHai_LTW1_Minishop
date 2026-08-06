@@ -13,6 +13,8 @@ class Product {
     public int $status = 1;
     public ?string $createdAt = null;
     public ?string $updatedAt = null;
+    public ?string $cateName = null;
+    public ?string $brandName = null;
 
     public function __construct(int $categoryId = 0, int $brandId = 0, string $proname = "", string $slug = "", float $price = 0, float $discountPrice = 0, int $quantity = 0, ?string $image = null, ?string $description = null, int $status = 1) {
         $this->categoryId = $categoryId;

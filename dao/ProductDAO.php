@@ -19,14 +19,33 @@ class ProductDAO extends BaseDAO {
         return $list;
     }
 
-    public function getAll() {
+    public function getAll($keyword = "") {
         $list = [];
         try {
-            $sql = "SELECT * FROM products ORDER BY id DESC";
-            $result = $this->executeQuery($sql);
+            $sql = "SELECT p.*, c.catename as cateName, b.brandname as brandName 
+                    FROM products p 
+                    LEFT JOIN categories c ON p.category_id = c.id 
+                    LEFT JOIN brands b ON p.brand_id = b.id";
+            if (!empty($keyword)) {
+                $sql .= " WHERE p.proname LIKE ? OR c.catename LIKE ?";
+            }
+            $sql .= " ORDER BY p.id DESC";
+
+            if (!empty($keyword)) {
+                $stmt = $this->prepare($sql);
+                $param = "%" . $keyword . "%";
+                $stmt->bind_param("ss", $param, $param);
+                $stmt->execute();
+                $result = $stmt->get_result();
+            } else {
+                $result = $this->executeQuery($sql);
+            }
+
             while ($row = $result->fetch_assoc()) {
                 $product = new Product((int)$row["category_id"], (int)$row["brand_id"], $row["proname"], $row["slug"], (float)$row["price"], (float)$row["discount_price"], (int)$row["quantity"], $row["image"], $row["description"], (int)$row["status"]);
                 $product->id = $row["id"];
+                $product->cateName = $row["cateName"];
+                $product->brandName = $row["brandName"];
                 $list[] = $product;
             }
         } catch (Exception $e) { throw $e; }

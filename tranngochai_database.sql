@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th8 05, 2026 lúc 10:56 AM
+-- Thời gian đã tạo: Th8 06, 2026 lúc 06:18 AM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -45,7 +45,8 @@ CREATE TABLE `brands` (
 INSERT INTO `brands` (`id`, `brandname`, `slug`, `image`, `description`, `status`, `created_at`, `updated_at`) VALUES
 (1, 'Apple', 'apple', NULL, NULL, 1, '2026-08-05 13:51:35', '2026-08-05 13:51:35'),
 (2, 'Samsung', 'samsung', NULL, NULL, 1, '2026-08-05 13:51:35', '2026-08-05 13:51:35'),
-(3, 'Dell', 'dell', NULL, NULL, 1, '2026-08-05 13:51:35', '2026-08-05 13:51:35');
+(3, 'Dell', 'dell', NULL, NULL, 1, '2026-08-05 13:51:35', '2026-08-05 13:51:35'),
+(4, 'Xiaomi', '', NULL, NULL, 1, '2026-08-06 09:41:20', '2026-08-06 09:41:20');
 
 -- --------------------------------------------------------
 
@@ -70,7 +71,7 @@ CREATE TABLE `categories` (
 
 INSERT INTO `categories` (`id`, `catename`, `slug`, `image`, `description`, `status`, `created_at`, `updated_at`) VALUES
 (1, 'Máy tính', 'may-tinh', NULL, NULL, 1, '2026-08-05 13:51:34', '2026-08-05 13:51:34'),
-(2, 'Điện thoại', 'dien-thoai', NULL, NULL, 1, '2026-08-05 13:51:34', '2026-08-05 13:51:34'),
+(2, 'Điện thoại', 'dien-thoai', NULL, 'ok', 1, '2026-08-05 13:51:34', '2026-08-06 09:39:22'),
 (3, 'Phụ kiện', 'phu-kien', NULL, NULL, 1, '2026-08-05 13:51:34', '2026-08-05 13:51:34');
 
 -- --------------------------------------------------------
@@ -120,7 +121,7 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `customer_id`, `user_id`, `order_code`, `total_amount`, `note`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, NULL, 'DH001', 34000000.00, NULL, 1, '2026-08-05 13:51:35', '2026-08-05 13:51:35'),
+(1, 1, NULL, 'DH001', 34000000.00, NULL, 2, '2026-08-05 13:51:35', '2026-08-06 09:41:35'),
 (2, 2, NULL, 'DH002', 24000000.00, NULL, 0, '2026-08-05 13:51:35', '2026-08-05 13:51:35'),
 (3, 3, NULL, 'DH003', 29500000.00, NULL, 1, '2026-08-05 13:51:35', '2026-08-05 13:51:35');
 
@@ -257,7 +258,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT cho bảng `brands`
 --
 ALTER TABLE `brands`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT cho bảng `categories`

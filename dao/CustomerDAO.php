@@ -5,14 +5,30 @@ require_once __DIR__ . "/../models/Customer.php";
 class CustomerDAO extends BaseDAO {
     public function __construct() { parent::__construct(); }
 
-    public function getAll() {
+    public function getAll($keyword = "") {
         $list = [];
         try {
             $sql = "SELECT * FROM customers";
-            $result = $this->executeQuery($sql);
+            if (!empty($keyword)) {
+                $sql .= " WHERE fullname LIKE ? OR email LIKE ? OR phone LIKE ?";
+            }
+            $sql .= " ORDER BY fullname";
+
+            if (!empty($keyword)) {
+                $stmt = $this->prepare($sql);
+                $param = "%" . $keyword . "%";
+                $stmt->bind_param("sss", $param, $param, $param);
+                $stmt->execute();
+                $result = $stmt->get_result();
+            } else {
+                $result = $this->executeQuery($sql);
+            }
+
             while ($row = $result->fetch_assoc()) {
-                $c = new Customer($row["fullname"], $row["phone"], $row["email"], $row["address"], $row["note"]);
-                $c->id = $row["id"];
+                $c = new Customer($row["fullname"], $row["phone"], $row["email"], $row["address"], $row["note"] ?? null);
+                $c->id = (int)$row["id"];
+                $c->createdAt = $row["created_at"] ?? null;
+                $c->updatedAt = $row["updated_at"] ?? null;
                 $list[] = $c;
             }
         } catch (Exception $e) { throw $e; }

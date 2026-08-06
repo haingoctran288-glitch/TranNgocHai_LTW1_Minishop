@@ -6,6 +6,8 @@ class Customer {
     public ?string $email = null;
     public ?string $address = null;
     public ?string $note = null;
+    public ?string $createdAt = null;
+    public ?string $updatedAt = null;
 
     public function __construct(string $fullname = "", string $phone = "", ?string $email = null, ?string $address = null, ?string $note = null) {
         $this->fullname = $fullname;

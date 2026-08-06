@@ -24,15 +24,65 @@ class OrderDAO extends BaseDAO {
         return $list;
     }
 
-    public function getAll() {
+    public function getAll($keyword = "") {
         $list = [];
         try {
-            $sql = "SELECT * FROM orders ORDER BY id DESC";
-            $result = $this->executeQuery($sql);
+            $sql = "SELECT o.*, c.fullname as customer_name, u.fullname as user_name 
+                    FROM orders o 
+                    LEFT JOIN customers c ON o.customer_id = c.id 
+                    LEFT JOIN users u ON o.user_id = u.id";
+            if (!empty($keyword)) {
+                $sql .= " WHERE o.order_code LIKE ? OR c.fullname LIKE ?";
+            }
+            $sql .= " ORDER BY o.id DESC";
+
+            if (!empty($keyword)) {
+                $stmt = $this->prepare($sql);
+                $param = "%" . $keyword . "%";
+                $stmt->bind_param("ss", $param, $param);
+                $stmt->execute();
+                $result = $stmt->get_result();
+            } else {
+                $result = $this->executeQuery($sql);
+            }
+
             while ($row = $result->fetch_assoc()) {
                 $o = new Order((int)$row["customer_id"], (int)$row["user_id"], $row["order_code"], (float)$row["total_amount"], $row["note"], (int)$row["status"]);
                 $o->id = $row["id"];
+                $o->createdAt = $row["created_at"];
+                $o->customerName = $row["customer_name"];
+                $o->userName = $row["user_name"];
                 $list[] = $o;
+            }
+        } catch (Exception $e) { throw $e; }
+        return $list;
+    }
+
+    public function updateStatus(int $id, int $status): bool {
+        try {
+            $sql = "UPDATE orders SET status=? WHERE id=?";
+            $stmt = $this->prepare($sql);
+            $stmt->bind_param("ii", $status, $id);
+            return $stmt->execute();
+        } catch (Exception $e) { throw $e; }
+    }
+
+    public function getOrderDetails(int $orderId) {
+        $list = [];
+        try {
+            $sql = "SELECT od.*, p.proname 
+                    FROM order_details od 
+                    JOIN products p ON od.product_id = p.id 
+                    WHERE od.order_id = ?";
+            $stmt = $this->prepare($sql);
+            $stmt->bind_param("i", $orderId);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            while ($row = $result->fetch_assoc()) {
+                $od = new OrderDetail((int)$row["order_id"], (int)$row["product_id"], (int)$row["quantity"], (float)$row["price"], (float)$row["subtotal"]);
+                $od->id = $row["id"];
+                $od->productName = $row["proname"]; // Using dynamic property
+                $list[] = $od;
             }
         } catch (Exception $e) { throw $e; }
         return $list;

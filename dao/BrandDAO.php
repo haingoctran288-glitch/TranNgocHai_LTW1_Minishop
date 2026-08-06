@@ -5,11 +5,25 @@ require_once __DIR__ . "/../models/Brand.php";
 class BrandDAO extends BaseDAO {
     public function __construct() { parent::__construct(); }
 
-    public function getAll() {
+    public function getAll($keyword = "") {
         $list = [];
         try {
-            $sql = "SELECT * FROM brands ORDER BY brandname";
-            $result = $this->executeQuery($sql);
+            $sql = "SELECT * FROM brands";
+            if (!empty($keyword)) {
+                $sql .= " WHERE brandname LIKE ?";
+            }
+            $sql .= " ORDER BY brandname";
+
+            if (!empty($keyword)) {
+                $stmt = $this->prepare($sql);
+                $param = "%" . $keyword . "%";
+                $stmt->bind_param("s", $param);
+                $stmt->execute();
+                $result = $stmt->get_result();
+            } else {
+                $result = $this->executeQuery($sql);
+            }
+
             while ($row = $result->fetch_assoc()) {
                 $brand = new Brand($row["brandname"], $row["slug"], $row["image"], $row["description"], (int)$row["status"]);
                 $brand->id = (int)$row["id"];
