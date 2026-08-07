@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th8 06, 2026 lúc 06:18 AM
+-- Thời gian đã tạo: Th8 07, 2026 lúc 06:28 AM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -43,7 +43,7 @@ CREATE TABLE `brands` (
 --
 
 INSERT INTO `brands` (`id`, `brandname`, `slug`, `image`, `description`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Apple', 'apple', NULL, NULL, 1, '2026-08-05 13:51:35', '2026-08-05 13:51:35'),
+(1, 'Apple', 'apple', '1786074479_apple.png', NULL, 1, '2026-08-05 13:51:35', '2026-08-07 10:47:59'),
 (2, 'Samsung', 'samsung', NULL, NULL, 1, '2026-08-05 13:51:35', '2026-08-05 13:51:35'),
 (3, 'Dell', 'dell', NULL, NULL, 1, '2026-08-05 13:51:35', '2026-08-05 13:51:35'),
 (4, 'Xiaomi', '', NULL, NULL, 1, '2026-08-06 09:41:20', '2026-08-06 09:41:20');
@@ -172,7 +172,29 @@ INSERT INTO `products` (`id`, `category_id`, `brand_id`, `proname`, `slug`, `pri
 (2, 2, 2, 'Galaxy S23 Ultra', 'galaxy-s23-ultra', 25000000, 24000000, 10, NULL, NULL, 1, '2026-08-05 13:51:35', '2026-08-05 13:51:35'),
 (3, 1, 3, 'Dell XPS 15', 'dell-xps-15', 30000000, 29000000, 7, NULL, NULL, 1, '2026-08-05 13:51:35', '2026-08-05 13:51:35'),
 (4, 3, 1, 'AirPods Pro', 'airpods-pro', 5000000, 4800000, 20, NULL, NULL, 1, '2026-08-05 13:51:35', '2026-08-05 13:51:35'),
-(5, 2, 1, 'iPhone 15 Pro Max', 'iphone-15-pro-max', 30000000, 29500000, 15, NULL, NULL, 1, '2026-08-05 13:51:35', '2026-08-05 13:51:35');
+(5, 2, 1, 'iPhone 15 Pro Max', 'iphone-15-pro-max', 30000000, 29500000, 15, '1786074439_iphone-15-pro-max.png', 'hello cô 3', 1, '2026-08-05 13:51:35', '2026-08-07 10:47:19');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `product_images`
+--
+
+CREATE TABLE `product_images` (
+  `id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `image` varchar(255) NOT NULL,
+  `sort_order` int(11) DEFAULT 0,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `product_images`
+--
+
+INSERT INTO `product_images` (`id`, `product_id`, `image`, `sort_order`, `created_at`, `updated_at`) VALUES
+(2, 5, '1786074446_0_iphone-15-pro-max.png', 0, '2026-08-07 10:47:26', '2026-08-07 10:47:26');
 
 -- --------------------------------------------------------
 
@@ -245,6 +267,13 @@ ALTER TABLE `products`
   ADD KEY `brand_id` (`brand_id`);
 
 --
+-- Chỉ mục cho bảng `product_images`
+--
+ALTER TABLE `product_images`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `product_id` (`product_id`);
+
+--
 -- Chỉ mục cho bảng `users`
 --
 ALTER TABLE `users`
@@ -291,6 +320,12 @@ ALTER TABLE `products`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT cho bảng `product_images`
+--
+ALTER TABLE `product_images`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT cho bảng `users`
 --
 ALTER TABLE `users`
@@ -320,6 +355,12 @@ ALTER TABLE `order_details`
 ALTER TABLE `products`
   ADD CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`),
   ADD CONSTRAINT `products_ibfk_2` FOREIGN KEY (`brand_id`) REFERENCES `brands` (`id`);
+
+--
+-- Các ràng buộc cho bảng `product_images`
+--
+ALTER TABLE `product_images`
+  ADD CONSTRAINT `product_images_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
