@@ -9,15 +9,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $description = trim($_POST["description"] ?? "");
     $status = $_POST["status"] ?? 1;
 
-    if ($cateName == "") {
-        $errors[] = "Tên danh mục không được để trống.";
-    }
-    if ($slug == "") {
-        $errors[] = "Slug không được để trống.";
+    $fileName = $_FILES["image"]["name"] ?? "";
+    $tmpName = $_FILES["image"]["tmp_name"] ?? "";
+    $fileSize = $_FILES["image"]["size"] ?? 0;
+    $errorUpload = $_FILES["image"]["error"] ?? 0;
+    $image = null;
+
+    if ($cateName == "") $errors[] = "Tên danh mục không được để trống.";
+    if ($slug == "") $errors[] = "Slug không được để trống.";
+
+    if ($fileName != "") {
+        if ($errorUpload != UPLOAD_ERR_OK) {
+            $errors[] = "Upload hình ảnh không thành công.";
+        }
+        $allowExtensions = ["jpg", "jpeg", "png", "gif", "webp"];
+        $extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+        if (!in_array($extension, $allowExtensions)) {
+            $errors[] = "Chỉ cho phép file JPG, JPEG, PNG hoặc WEBP.";
+        }
+        if ($fileSize > 200 * 1024) {
+            $errors[] = "Kích thước hình ảnh <= 200 KB.";
+        }
     }
 
     if (empty($errors)) {
-        $category = new Category($cateName, $slug, null, $description, (int)$status);
+        if ($fileName != "") {
+            $extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+            $image = time() . "_" . $slug . "." . $extension;
+            $uploadPathDir = __DIR__ . "/../../../uploads/categories";
+            if (!is_dir($uploadPathDir)) mkdir($uploadPathDir, 0777, true);
+            $uploadPath = $uploadPathDir . "/" . $image;
+            move_uploaded_file($tmpName, $uploadPath);
+        }
+
+        $category = new Category($cateName, $slug, $image, $description, (int)$status);
         if ($dao->insert($category)) {
             header("Location: index.php");
             exit;
@@ -37,13 +62,9 @@ ob_start();
         </div>
         <div class="card-body">
             <?php if (!empty($errors)) { ?>
-                <div class="alert alert-danger">
-                    <ul>
-                        <?php foreach($errors as $err) echo "<li>$err</li>"; ?>
-                    </ul>
-                </div>
+                <div class="alert alert-danger"><ul><?php foreach($errors as $err) echo "<li>$err</li>"; ?></ul></div>
             <?php } ?>
-            <form method="POST">
+            <form method="POST" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label class="form-label">Tên danh mục</label>
                     <input type="text" name="cateName" class="form-control" value="<?= htmlspecialchars($_POST['cateName'] ?? '') ?>">
@@ -51,6 +72,11 @@ ob_start();
                 <div class="mb-3">
                     <label class="form-label">Slug</label>
                     <input type="text" name="slug" class="form-control" value="<?= htmlspecialchars($_POST['slug'] ?? '') ?>">
+                </div>
+                <div class="mb-3">
+                    <div class="text-center mb-3" id="preview"></div>
+                    <label class="form-label"> Hình ảnh danh mục</label>
+                    <input type="file" id="image" name="image" class="form-control" accept="image/*">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Mô tả</label>

@@ -10,6 +10,16 @@ $pageTitle = "Chi tiết thương hiệu"; ob_start();
 <div class="container mt-4"><div class="card shadow-sm border-0"><div class="card-body">
     <h4 class="fw-bold text-secondary mb-4">Chi tiết thương hiệu #<?= $brand->id ?></h4>
     <table class="table table-bordered">
+                <tr>
+                    <th width="20%">Hình ảnh</th>
+                    <td>
+                        <?php if ($brand->image != "") { ?>
+                            <img src="/MiniShop_TranNgocHai/uploads/brands/<?= $brand->image ?>" class="img-thumbnail" width="150">
+                        <?php } else { ?>
+                            <span class="text-muted">No Image</span>
+                        <?php } ?>
+                    </td>
+                </tr>
         <tr><th width="20%">ID</th><td><?= $brand->id ?></td></tr>
         <tr><th>Tên thương hiệu</th><td class="text-primary fw-bold"><?= htmlspecialchars($brand->brandname) ?></td></tr>
         <tr><th>Trạng thái</th><td><?= $brand->status == 1 ? "Hiển thị" : "Ẩn" ?></td></tr>

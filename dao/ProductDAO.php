@@ -94,5 +94,38 @@ class ProductDAO extends BaseDAO {
             return $stmt->execute();
         } catch (Exception $e) { throw $e; }
     }
+
+    public function insertImage(int $productId, string $image): bool {
+        try {
+            $sql = "INSERT INTO product_images(product_id, image) VALUES(?, ?)";
+            $stmt = $this->prepare($sql);
+            $stmt->bind_param("is", $productId, $image);
+            return $stmt->execute();
+        } catch (Exception $e) { throw $e; }
+    }
+
+    public function getImagesByProductId(int $productId): array {
+        $list = [];
+        try {
+            $sql = "SELECT id, image FROM product_images WHERE product_id=?";
+            $stmt = $this->prepare($sql);
+            $stmt->bind_param("i", $productId);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            while ($row = $result->fetch_assoc()) {
+                $list[] = $row;
+            }
+        } catch (Exception $e) { throw $e; }
+        return $list;
+    }
+
+    public function deleteImage(int $id): bool {
+        try {
+            $sql = "DELETE FROM product_images WHERE id=?";
+            $stmt = $this->prepare($sql);
+            $stmt->bind_param("i", $id);
+            return $stmt->execute();
+        } catch (Exception $e) { throw $e; }
+    }
 }
 ?>

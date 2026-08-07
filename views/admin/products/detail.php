@@ -19,6 +19,31 @@ ob_start();
         </div>
         <div class="card-body">
             <table class="table table-bordered">
+                <tr>
+                    <th width="20%">Hình ảnh</th>
+                    <td>
+                        <?php if ($product->image != "") { ?>
+                            <img src="/MiniShop_TranNgocHai/uploads/products/<?= $product->image ?>" class="img-thumbnail" width="150">
+                        <?php } else { ?>
+                            <span class="text-muted">No Image</span>
+                        <?php } ?>
+                    </td>
+                </tr>
+                <?php
+                $gallery = $dao->getImagesByProductId($id);
+                if (!empty($gallery)) {
+                ?>
+                <tr>
+                    <th>Gallery</th>
+                    <td>
+                        <div class="d-flex flex-wrap gap-2">
+                            <?php foreach ($gallery as $g) { ?>
+                                <img src="/MiniShop_TranNgocHai/uploads/products/<?= $g['image'] ?>" class="img-thumbnail" width="80">
+                            <?php } ?>
+                        </div>
+                    </td>
+                </tr>
+                <?php } ?>
                 <tr><th width="20%">ID</th><td><?= $product->id ?></td></tr>
                 <tr><th>Tên sản phẩm</th><td class="text-primary fw-bold"><?= htmlspecialchars($product->proname) ?></td></tr>
                 <tr><th>Slug</th><td><?= htmlspecialchars($product->slug) ?></td></tr>

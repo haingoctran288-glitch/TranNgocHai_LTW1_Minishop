@@ -35,10 +35,17 @@ ob_start();
             <div class="alert alert-warning">Không tìm thấy dữ liệu.</div>
         <?php } else { ?>
             <table class="table table-hover">
-                <thead><tr><th>ID</th><th>Tên thương hiệu</th><th>Trạng thái</th><th>Chức năng</th></tr></thead>
+                <thead><tr><th>Hình ảnh</th><th>ID</th><th>Tên thương hiệu</th><th>Trạng thái</th><th>Chức năng</th></tr></thead>
                 <tbody>
                     <?php foreach ($brands as $item) { ?>
                     <tr>
+                        <td>
+                            <?php if ($item->image != "") { ?>
+                                <img src="/MiniShop_TranNgocHai/uploads/brands/<?= $item->image ?>" alt="<?= htmlspecialchars($item->brandname) ?>" class="img-thumbnail" width="80">
+                            <?php } else { ?>
+                                <span class="text-muted">No Image</span>
+                            <?php } ?>
+                        </td>
                         <td><?= $item->id ?></td>
                         <td class="fw-bold"><?= htmlspecialchars($item->brandname) ?></td>
                         <td><?= $item->status == 1 ? '<span class="badge bg-success">Hiển thị</span>' : '<span class="badge bg-secondary">Ẩn</span>' ?></td>

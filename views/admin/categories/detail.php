@@ -19,6 +19,16 @@ ob_start();
         </div>
         <div class="card-body">
             <table class="table table-bordered">
+                <tr>
+                    <th width="20%">Hình ảnh</th>
+                    <td>
+                        <?php if ($category->image != "") { ?>
+                            <img src="/MiniShop_TranNgocHai/uploads/categories/<?= $category->image ?>" class="img-thumbnail" width="150">
+                        <?php } else { ?>
+                            <span class="text-muted">No Image</span>
+                        <?php } ?>
+                    </td>
+                </tr>
                 <tr><th width="20%">ID</th><td><?= $category->id ?></td></tr>
                 <tr><th>Tên danh mục</th><td class="text-primary fw-bold"><?= htmlspecialchars($category->name) ?></td></tr>
                 <tr><th>Slug</th><td><?= htmlspecialchars($category->slug) ?></td></tr>

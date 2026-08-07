@@ -39,6 +39,7 @@ ob_start();
             <table class="table table-hover">
                 <thead>
                     <tr>
+                        <th>Hình ảnh</th>
                         <th>STT</th>
                         <th>Tên danh mục</th>
                         <th>Slug</th>
@@ -50,6 +51,13 @@ ob_start();
                 <tbody>
                     <?php $stt = 1; foreach ($categories as $item) { ?>
                     <tr>
+                        <td>
+                            <?php if ($item->image != "") { ?>
+                                <img src="/MiniShop_TranNgocHai/uploads/categories/<?= $item->image ?>" alt="<?= htmlspecialchars($item->name) ?>" class="img-thumbnail" width="80">
+                            <?php } else { ?>
+                                <span class="text-muted">No Image</span>
+                            <?php } ?>
+                        </td>
                         <td><?= $stt++ ?></td>
                         <td class="fw-bold"><?= htmlspecialchars($item->name) ?></td>
                         <td><?= htmlspecialchars($item->slug) ?></td>

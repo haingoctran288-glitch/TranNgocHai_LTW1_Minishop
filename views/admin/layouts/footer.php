@@ -5,6 +5,7 @@
     2026 - Trần Ngọc Hải
 </footer>
 <script src="/MiniShop_TranNgocHai/assets/bootstrap.bundle.min.js"></script>
+<script src="/MiniShop_TranNgocHai/assets/admin/admin.js"></script>
 </body>
 </html>
 
